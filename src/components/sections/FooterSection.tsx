@@ -3,7 +3,7 @@ import React from 'react'
 const FooterSection = () => {
   return (
     <>
-      <span className={`text-sm text-gray-600 font-light inline-block pb-8`}>Blog creado con Next.js y TailwindCSS por Leandro Méndez</span>
+      <span className={`text-sm text-center leading-6 text-slate-50 font-light inline-block mt-16 mb-4 tracking-widest`}>Blog creado con Next.js, Typescript y TailwindCSS</span>
     </>
   )
 }

@@ -9,14 +9,11 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts}:IPosts) {
   return (
-    <main className={`flex flex-col lg:max-w-3xl mx-auto min-h-screen justify-between`}>
+    <main className={`flex flex-col max-w-xs sm:max-w-xl lg:max-w-3xl mx-auto min-h-full justify-between`}>
       <section>
       <HeroSection/>
       <RecentPosts posts={posts}/>
       </section>
-      <footer className={`flex flex-col place-items-center`}>
-        <FooterSection/>
-      </footer>
     </main>
   )
 }

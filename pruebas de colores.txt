@@ -1,0 +1,33 @@
+
+// FUCSIA Y VERDE CLARITO
+
+//light
+'text': '#041105',
+'background': '#f7fdf7',
+'primary': '#d84bce',
+'secondary': '#d1f5d3',
+'accent': '#9b2293',
+
+//dark
+'text': '#f7fdf7',
+'background': '#041105',
+'primary': '#d84bce',
+'secondary': '#0a2e0c',
+'accent': '#9b2293',
+
+
+
+//amarillito verdoso
+//light
+'text': '#0a041b',
+'background': '#eae4fb',
+'primary': '#d6ee8b',
+'secondary': '#dcd2f9',
+'accent': '#b6e232',
+
+//dark
+'text': '#eae4fb',
+'background': '#0a041b',
+'primary': '#d6ee8b',
+'secondary': '#110732',
+'accent': '#b6e232',
