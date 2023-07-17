@@ -1,24 +1,41 @@
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
-export interface IPost{
+export interface IArticle{
   frontmatter: IFrontmatter
   content: MDXRemoteSerializeResult<Record<string, unknown>, Record<string, unknown>>;
 }
 
+export interface IMainArticle {
+  article: IArticle
+}
+
 interface IFrontmatter{
+  description: string;
   slug: string;
   title: string;
   date: string;
 }
 
 
-export interface IPosts{
-  posts: IPost[]
+export interface IArticles extends ICustom{
+  articles: IArticle[]
 }
 
 
+export interface IHeroSection {
+  className?: string;
+}
 
 
+interface ICustom{
+  colorFont?:string;
+  cant?: number;
+
+}
+
+export interface ISocialMediaSection {
+  colorFont?: string;
+}
 
 
 

@@ -31,3 +31,13 @@
 'primary': '#d6ee8b',
 'secondary': '#110732',
 'accent': '#b6e232',
+
+
+
+
+
+
+
+
+/BLOG INDEX SECTION
+max-w-xs sm:max-w-xl lg:max-w-4xl mx-auto min-h-[900px]
