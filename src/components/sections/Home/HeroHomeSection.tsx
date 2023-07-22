@@ -6,7 +6,7 @@ import { IHeroSection } from "@/types";
 const HeroHomeSection: React.FC<IHeroSection> = ( {className} ) => {
   const styles = className ? className : ""
   return (
-    <section className={`${styles} pb-12`}>
+    <section className={`${styles} pb-2`}>
       <main className={`flex flex-col gap-3 `}>
         <Nav />
         <Image
@@ -16,13 +16,7 @@ const HeroHomeSection: React.FC<IHeroSection> = ( {className} ) => {
           height={192}
           alt="logo bloguito"
         />
-        <p
-          className={`text-lg text-light-secondary-100 font-normal tracking-tight`}
-        >
-          Este blog tiene la finalidad de compartir distintos artículos sobre
-          tecnología, tutoriales, y demás cosas interesantes que me pasan en el
-          día a día en el mundo de sistemas.
-        </p>
+        
       </main>
     </section>
   );

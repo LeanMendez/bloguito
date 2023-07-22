@@ -5,6 +5,7 @@ import { serialize } from "next-mdx-remote/serialize"
 import { IPostBySlug } from "@/types"
 
 
+
 const root = process.cwd()
 const folder = "content"
 

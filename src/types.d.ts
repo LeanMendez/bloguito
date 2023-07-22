@@ -9,11 +9,16 @@ export interface IMainArticle {
   article: IArticle
 }
 
+export interface IArticleWithExtraData extends IArticle{
+  articles: IArticle[]
+}
+
 interface IFrontmatter{
   description: string;
   slug: string;
   title: string;
   date: string;
+  categories: string[];
 }
 
 

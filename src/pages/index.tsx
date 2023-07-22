@@ -14,6 +14,13 @@ export default function Home({ articles }: IArticles) {
       className={`flex flex-col max-w-xs sm:max-w-xl lg:max-w-4xl mx-auto min-h-full justify-between `}
     >
       <HeroHomeSection />
+      <p
+          className={`text-lg text-light-secondary-100 font-normal tracking-tight pb-4`}
+        >
+          Este blog tiene la finalidad de compartir distintos artículos sobre
+          tecnología, tutoriales, y demás cosas interesantes que me pasan en el
+          día a día en el mundo de sistemas.
+        </p>
       <MainHomeSection articles={articles} />
       <FooterSection />
     </main>

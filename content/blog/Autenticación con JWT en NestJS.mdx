@@ -1,0 +1,122 @@
+---
+title: 'Autenticación con JWT en NestJS'
+description: 'La forma más segura de proteger tus aplicaciones con JWT'
+date: '22 de Julio 2023'
+categories: ["NestJS", "JWT", "Backend", "Passport"]
+---
+
+
+# ¡La forma más segura de proteger tus aplicaciones!
+¡Hola a todos los amigos desarrolladores! Hoy vamos a hablar de autenticación con JWT (JSON Web Tokens) en nuestras aplicaciones NestJS. Seguro que muchos de ustedes se preguntan qué es este asunto del JWT y por qué es tan genial para asegurar nuestras apps. Bueno, no se preocupen, que les voy a contar todo en detalle.
+
+## ¿Qué es JWT y para qué se usa?
+
+Primero, vamos a desglosar el nombre. JSON Web Tokens, o simplemente JWT, es un estándar abierto (eso quiere decir que todos pueden usarlo) que nos permite enviar información de manera segura entre dos partes. Pero, ¿qué partes son esas? Pueden ser el servidor y el cliente, o incluso diferentes servicios dentro de una misma aplicación.
+
+JWT se usa principalmente para autenticación y autorización, o sea, para saber quién sos y qué permisos tenés en la app. Cuando un usuario inicia sesión, el servidor genera un JWT que contiene información sobre el usuario (como su ID o rol), y luego se lo envía al cliente. El cliente puede almacenar ese JWT (por ejemplo, en LocalStorage) y enviarlo en cada solicitud al servidor. Así, el servidor puede verificar si el JWT es válido y conceder acceso a recursos protegidos.
+
+## ¿Por qué es seguro utilizar JWT?
+
+¡Muy buena pregunta! JWT es seguro por varias razones. Primero, está firmado digitalmente, lo que significa que el servidor puede verificar si el JWT ha sido modificado o falsificado. Además, al no almacenar información sensible en el servidor, reducimos la necesidad de almacenar sesiones y, por ende, minimizamos riesgos de robo de información.
+
+## JWT vs. Sesiones: ¿Por qué elegir JWT?
+
+A ver, antes de JWT, muchos usábamos sesiones para la autenticación, pero no todo era color de rosas. Con sesiones, el servidor debe mantener un registro de cada sesión activa, lo que puede generar problemas de escalabilidad y rendimiento, ¡un verdadero quilombo! En cambio, JWT es stateless (sin estado), lo que significa que el servidor no necesita guardar información del usuario, haciendo las cosas más livianas.
+
+## Implementando JWT en NestJS para proteger rutas
+
+### Paso 1: Instalando las dependencias necesarias 
+Primero, necesitamos asegurarnos de tener las dependencias adecuadas instaladas en nuestra aplicación. Vamos a necesitar `@nestjs/jwt`, `@nestjs/passport` y `passport-jwt`, así que asegúrate de tenerlas en tu archivo `package.json`. Si aún no las tienes, puedes instalarlas con el siguiente comando:
+
+```bash
+npm install @nestjs/jwt @nestjs/passport passport-jwt
+``` 
+
+### Paso 2: Configurando el módulo de autenticación
+
+
+Ahora, debemos configurar nuestro módulo de autenticación en el archivo `app.module.ts`. Este módulo será responsable de manejar todo lo relacionado con la autenticación JWT en nuestra aplicación.
+
+```typescript
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
+import { AuthService } from './auth.service';
+
+@Module({
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: 'tu_secreto_super_secreto', // Cambia esto por una clave secreta de verdad
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
+  providers: [AuthService, JwtStrategy],
+  exports: [PassportModule, JwtModule],
+})
+export class AuthModule {}
+
+```
+
+### Paso 3: Creando el archivo `jwt.strategy.ts`
+
+Ahora, vamos a crear el archivo `jwt.strategy.ts` en el mismo directorio que el módulo de autenticación. Este archivo contendrá nuestra estrategia personalizada para manejar la autenticación JWT.
+
+```typescript
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import { JwtPayload } from './jwt-payload.interface';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: 'tu_secreto_super_secreto', // Debe coincidir con la clave del JwtModule
+    });
+  }
+
+  async validate(payload: JwtPayload) {
+    // Aquí puedes hacer cualquier validación adicional, 
+    //como verificar si el usuario existe en la base de datos
+    // Por simplicidad, simplemente retornamos el payload, 
+    //pero puedes personalizarlo según tus necesidades
+    return payload;
+  }
+}
+```
+
+### Paso 4: Protegiendo una ruta
+
+Ahora que hemos configurado nuestro módulo de autenticación y creado nuestra estrategia JWT, es hora de proteger una ruta en nuestro controller.
+
+Primero, supongamos que tenemos un `UserController` con una ruta para obtener los datos del usuario actual:
+
+```typescript
+import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Controller('users')
+export class UserController {
+  @Get('profile')
+  @UseGuards(AuthGuard())
+  getProfile(@Request() req) {
+    return req.user; 
+    // Aquí accedemos a la información del usuario autenticado a través del request
+  }
+}
+```
+
+En el código anterior, usamos el decorador `@UseGuards(AuthGuard())` para aplicar la protección JWT a la ruta `profile` en nuestro `UserController`. Esto asegurará que solo los usuarios autenticados (con JWT válido) puedan acceder a esa ruta.
+
+### Paso 5: Protegiendo otros módulos/rutas
+
+Si tienes otros módulos en tu aplicación y deseas proteger rutas en ellos, simplemente repite el paso 4 para cada ruta que necesites asegurar. Asegúrate de importar correctamente el `AuthGuard` en esos módulos.
+
+**Y listo, amigos!**
+
+Con eso, hemos implementado con éxito la autenticación JWT en nuestra aplicación NestJS. Ahora, nuestras rutas están protegidas y solo los usuarios autenticados pueden acceder a ellas. ¡Asombroso!
+
+Espero que esta guía detallada haya sido de ayuda para ti. Si tienes alguna pregunta o necesitas más aclaraciones, ¡no dudes en preguntar! Ahora, sigue construyendo apps seguras como un verdadero crack. ¡Hasta la próxima! 🚀

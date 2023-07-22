@@ -1,25 +1,38 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { getFiles, getPostBySlug } from "@/lib/mdx";
-
+import { getAllFilesFrontmatter, getFiles, getPostBySlug } from "@/lib/mdx";
 import { MDXRemote } from "next-mdx-remote";
-import React from "react";
-import { IArticle } from "@/types";
+import { IArticleWithExtraData } from "@/types";
+import SocialMedia from "@/components/sections/SocialMedia";
+import HeroHomeSection from "@/components/sections/Home/HeroHomeSection";
+import FeaturedArticles from "@/components/sections/FeaturedArticles";
+import Categories from "@/components/sections/Categories";
 
-const Article: React.FC<IArticle> = ({ content, frontmatter }) => {
+
+const Article: React.FC<IArticleWithExtraData> = ({ content, frontmatter, articles}) => {
   const { date, title } = frontmatter;
   return (
     <>
-    <section className={`bg-hero-article bg-cover bg-center  min-h-[450px]`}>
+    <section className={`bg-hero-article bg-cover bg-center  min-h-[350px]`}>
     </section>
-      <main className="flex flex-col mx-auto min-w-[800px] min-h-[80vh] prose prose-mine">
-        <span
-          className={`text-sm py-1 px-6 bg-slate-100 place-self-end text-jet-mine-800`}
-        >
-          {date}
-        </span>
-        <h1 className={`mt-8 text-5xl text-slate-200`}>{title}</h1>
+      <div className={`bg-dark-primary-700 `}>
+      <main className="flex flex-row lg:max-w-7xl bg-dark-primary-700 min-h-[calc(100vh-350px)] mx-auto gap-8">
+        <article className={`flex-1 bg-light-secondary-100 relative left-0 -top-52`}>
+          <HeroHomeSection className="bg-purple-950"/>
+        <div className="my-8 mx-auto max-w-2xl prose-base">
+          <h2 className={`text-4xl text-center leading-tight font-medium text-primary-700 mb-4`}>{title}</h2>
+          <p className={`text-center m-0`}>Publicado el {date} por <strong className={`text-primary-700 font-medium`}>Leandro Méndez</strong></p>
+        <hr className="border-2 border-primary-700 my-8"/>
         <MDXRemote {...content} />
+        </div>
+        </article>
+        <aside className={`flex-[0.5_0.5_0%]`}>
+          {frontmatter.categories && <Categories categories={frontmatter.categories}/>}
+          <SocialMedia/>
+          <h3 className={`text-2xl font-medium text-secondary-300 uppercase my-4`}>Artículos destacados</h3>
+          <FeaturedArticles colorFont="text-light-secondary-100" cant={4} articles={articles} />
+        </aside>
       </main>
+      </div>
     
     </>
   );
@@ -28,26 +41,10 @@ const Article: React.FC<IArticle> = ({ content, frontmatter }) => {
 export default Article;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
   const { content, frontmatter } = await getPostBySlug("blog", slug);
-
+  const articles = await getAllFilesFrontmatter('blog')
   return {
     props: {
       content,
@@ -55,6 +52,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         slug: params?.slug as string,
         ...frontmatter,
       },
+      articles
     },
   };
 };
